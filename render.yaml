@@ -1,24 +1,21 @@
-services:
-  # PostgreSQL Database
-  - type: pserv
-    name: smart-airbnb-db
-    env: docker
+databases:
+  - name: smartairbnb
     plan: free
-    region: oregon
+    databaseName: listings_db
+    user: postgres
 
-  # Flask Web Service
+services:
   - type: web
     name: smart-airbnb
     env: python
     region: oregon
     plan: free
-    branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: smart-airbnb-db
+          name: smartairbnb
           property: connectionString
       - key: PYTHON_VERSION
         value: 3.11.0
