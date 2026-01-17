@@ -5,8 +5,6 @@ services:
     env: docker
     plan: free
     region: oregon
-    databaseName: listings_db
-    databaseUser: postgres
 
   # Flask Web Service
   - type: web
