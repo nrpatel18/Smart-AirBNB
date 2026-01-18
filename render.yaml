@@ -8,7 +8,7 @@ services:
     env: python
     region: oregon
     plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python init_render_db.py
     startCommand: gunicorn app:app
     envVars:
       - key: DATABASE_URL

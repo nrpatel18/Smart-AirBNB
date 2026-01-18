@@ -18,51 +18,6 @@ app = Flask(__name__)
 # Secret key for session/flash support (set this to a secure random value)
 app.secret_key = os.urandom(24)
 
-# Initialize database on startup (only once)
-def initialize_app():
-    """Initialize database schema and data on first run"""
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        
-        # Check if database is already initialized by checking for Listing table
-        cur.execute("""
-            SELECT EXISTS (
-                SELECT FROM information_schema.tables 
-                WHERE table_schema = 'public' 
-                AND table_name = 'listing'
-            );
-        """)
-        table_exists = cur.fetchone()[0]
-        
-        if not table_exists:
-            print("Database not initialized. Initializing schema...")
-            cur.close()
-            conn.close()
-            
-            # Initialize schema
-            init_db()
-            
-            # Load production data
-            print("Loading production data...")
-            load_production_data_if_needed()
-            
-            # Initialize analytics views
-            print("Initializing analytics views...")
-            init_analytics_views()
-            print("Database initialization complete!")
-        else:
-            print("Database already initialized.")
-            cur.close()
-            conn.close()
-    except Exception as e:
-        print(f"Error during initialization: {e}")
-        print("You may need to initialize the database manually.")
-
-# Run initialization when app starts (before first request)
-with app.app_context():
-    initialize_app()
-
 def get_db_connection():
     conn = psycopg2.connect(**DB_CONFIG)
     return conn
