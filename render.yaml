@@ -1,8 +1,6 @@
 databases:
   - name: smartairbnb
     plan: free
-    databaseName: listings_db
-    user: postgres
 
 services:
   - type: web
